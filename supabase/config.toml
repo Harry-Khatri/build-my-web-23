@@ -1,0 +1,4 @@
+project_id = "nnzvfeskrvmmxqzfjhzl"
+
+[functions.analyze-vitamin-deficiency]
+verify_jwt = false
