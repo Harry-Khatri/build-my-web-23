@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Upload, Eye, Droplet, HandMetal, Microscope } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Upload, Eye, Droplet, HandMetal, Microscope, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { User } from "@supabase/supabase-js";
 
 type BodyPart = "skin" | "eyes" | "tongue" | "nails";
 
@@ -23,7 +25,22 @@ const Index = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const bodyParts = [
     { id: "skin" as BodyPart, label: "Skin", icon: Droplet, description: "Analyze skin texture & color" },
@@ -69,6 +86,17 @@ const Index = () => {
       if (error) throw error;
 
       setResult(data);
+
+      // Save to analysis history if user is logged in
+      if (user) {
+        await supabase.from('analysis_history').insert({
+          user_id: user.id,
+          body_part: selectedPart,
+          image_url: imagePreview.substring(0, 100), // Store preview of base64
+          analysis_result: data
+        });
+      }
+
       toast({
         title: "Analysis Complete",
         description: "Your results are ready",
@@ -85,6 +113,13 @@ const Index = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Signed out successfully",
+    });
+  };
+
   const reset = () => {
     setSelectedPart(null);
     setImagePreview(null);
@@ -93,6 +128,57 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      {/* Navigation */}
+      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-8">
+              <h2 className="text-xl font-bold">Vitamin Detector</h2>
+              <div className="hidden md:flex gap-6">
+                <Button variant="ghost" onClick={() => navigate("/")}>Home</Button>
+                <Button variant="ghost" onClick={() => navigate("/learn-more")}>Learn More</Button>
+                <Button variant="ghost" onClick={() => navigate("/contact")}>Contact</Button>
+                {user && <Button variant="ghost" onClick={() => navigate("/profile")}>Profile</Button>}
+              </div>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-4">
+              {user ? (
+                <>
+                  <span className="text-sm text-muted-foreground">{user.email}</span>
+                  <Button onClick={handleSignOut} variant="outline">Sign Out</Button>
+                </>
+              ) : (
+                <Button onClick={() => navigate("/auth")}>Sign In</Button>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 space-y-2">
+              <Button variant="ghost" className="w-full" onClick={() => { navigate("/"); setMobileMenuOpen(false); }}>Home</Button>
+              <Button variant="ghost" className="w-full" onClick={() => { navigate("/learn-more"); setMobileMenuOpen(false); }}>Learn More</Button>
+              <Button variant="ghost" className="w-full" onClick={() => { navigate("/contact"); setMobileMenuOpen(false); }}>Contact</Button>
+              {user && <Button variant="ghost" className="w-full" onClick={() => { navigate("/profile"); setMobileMenuOpen(false); }}>Profile</Button>}
+              {user ? (
+                <Button onClick={handleSignOut} variant="outline" className="w-full">Sign Out</Button>
+              ) : (
+                <Button onClick={() => { navigate("/auth"); setMobileMenuOpen(false); }} className="w-full">Sign In</Button>
+              )}
+            </div>
+          )}
+        </div>
+      </nav>
+
       <div className="container mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -100,7 +186,7 @@ const Index = () => {
             Vitamin Deficiency Detector
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            AI-powered analysis to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
+            Deep neural network using AlexNet and RCNN to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
           </p>
         </div>
 
