@@ -83,18 +83,7 @@ const Index = () => {
         },
       });
 
-      if (error) {
-        // Check if it's an invalid image error
-        if (error.message?.includes("invalid_image") || error.message?.includes("not a valid image")) {
-          toast({
-            title: "Invalid Image",
-            description: "This is not a valid image for this section. Please upload a clear image of your " + selectedPart + ".",
-            variant: "destructive",
-          });
-          return;
-        }
-        throw error;
-      }
+      if (error) throw error;
 
       setResult(data);
 
