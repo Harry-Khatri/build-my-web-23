@@ -33,7 +33,59 @@ Deno.serve(async (req) => {
       throw new Error("LOVABLE_API_KEY not configured");
     }
 
-    // Create detailed prompt based on body part
+    // Step 1: Validate that the image matches the selected body part
+    const validationPrompts = {
+      skin: "Is this image showing human skin? Look for skin texture, pores, and skin surface. Return true only if you can clearly see skin.",
+      eyes: "Is this image showing a human eye? Look for iris, pupil, sclera, eyelid, or eyelashes. Return true only if you can clearly see an eye.",
+      tongue: "Is this image showing a human tongue? Look for tongue surface, papillae, or oral cavity. Return true only if you can clearly see a tongue.",
+      nails: "Is this image showing human nails? Look for nail plate, nail bed, or fingertips/toes. Return true only if you can clearly see nails.",
+    };
+
+    console.log(`Validating ${bodyPart} image`);
+
+    const validationResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: `${validationPrompts[bodyPart as keyof typeof validationPrompts]} Answer with only 'yes' or 'no'.` },
+              {
+                type: "image_url",
+                image_url: { url: image },
+              },
+            ],
+          },
+        ],
+      }),
+    });
+
+    if (!validationResponse.ok) {
+      throw new Error(`Validation error: ${validationResponse.status}`);
+    }
+
+    const validationData = await validationResponse.json();
+    const validationResult = validationData.choices[0].message.content.toLowerCase().trim();
+    
+    console.log(`Validation result: ${validationResult}`);
+
+    if (!validationResult.includes('yes')) {
+      return new Response(
+        JSON.stringify({ 
+          error: "invalid_image",
+          message: `This image does not appear to be a valid ${bodyPart} image. Please upload a clear image of your ${bodyPart}.`
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Step 2: Analyze for vitamin deficiencies
     const prompts = {
       skin: "Analyze this skin image for signs of vitamin deficiencies. Look for: pale or yellowish skin (B12, folate, iron), dry/scaly patches (A, E), easy bruising (C, K), poor wound healing (C, zinc). Identify specific deficiencies, severity, visible signs, and provide dietary recommendations.",
       eyes: "Analyze this eye image for vitamin deficiency signs. Look for: night blindness indicators (A), pale conjunctiva (iron, B12), bloodshot eyes (B2), corneal issues (A), dry eyes (A, omega-3). Identify deficiencies, severity, observable signs, and suggest supplements or foods.",
@@ -41,7 +93,7 @@ Deno.serve(async (req) => {
       nails: "Inspect this nail image for vitamin deficiency indicators. Look for: brittle/splitting nails (biotin, iron), white spots (zinc), pale nail beds (iron, B12), spoon-shaped nails (iron), ridges (B vitamins, iron). Detail deficiencies, severity levels, nail signs, and nutritional recommendations.",
     };
 
-    const systemPrompt = `You are a medical AI assistant specializing in nutritional deficiency detection through visual analysis. 
+    const systemPrompt = `You are a medical nutrition specialist analyzing images for vitamin and mineral deficiency detection.
 
 Analyze images carefully and provide structured output with:
 1. List of potential vitamin/mineral deficiencies

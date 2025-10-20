@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
+import medicalBg from "@/assets/medical-supplements-bg.jpg";
 
 type BodyPart = "skin" | "eyes" | "tongue" | "nails";
 
@@ -83,7 +84,16 @@ const Index = () => {
         },
       });
 
-      if (error) throw error;
+      // Check for validation error
+      if (error || data?.error === "invalid_image") {
+        toast({
+          title: "Invalid Image",
+          description: data?.message || `This image does not appear to be a valid ${selectedPart} image. Please upload a clear image of your ${selectedPart}.`,
+          variant: "destructive",
+        });
+        setIsAnalyzing(false);
+        return;
+      }
 
       setResult(data);
 
@@ -127,7 +137,11 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+    <div 
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${medicalBg})` }}
+    >
+      <div className="min-h-screen bg-background/80 backdrop-blur-sm">
       {/* Navigation */}
       <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4">
@@ -186,7 +200,7 @@ const Index = () => {
             Vitamin Deficiency Detector
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Deep neural network using AlexNet and RCNN to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
+            Advanced visual analysis to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
           </p>
         </div>
 
@@ -368,7 +382,7 @@ const Index = () => {
                 {[
                   { step: "1", title: "Select", desc: "Choose the body part to analyze" },
                   { step: "2", title: "Upload", desc: "Take or upload a clear photo" },
-                  { step: "3", title: "Analyze", desc: "AI examines for deficiency signs" },
+                  { step: "3", title: "Analyze", desc: "System examines for deficiency signs" },
                   { step: "4", title: "Results", desc: "Get detailed insights & advice" },
                 ].map((item) => (
                   <div key={item.step} className="text-center">
@@ -383,6 +397,7 @@ const Index = () => {
             </CardContent>
           </Card>
         )}
+      </div>
       </div>
     </div>
   );
