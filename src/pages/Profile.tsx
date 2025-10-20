@@ -295,9 +295,22 @@ const Profile = () => {
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-sm text-muted-foreground">
-                              {analysis.analysis_result.deficiencies?.length || 0} deficiencies detected
-                            </p>
+                            {analysis.analysis_result.deficiencies?.length > 0 ? (
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium">
+                                  {analysis.analysis_result.deficiencies.length} vitamin deficienc{analysis.analysis_result.deficiencies.length === 1 ? 'y' : 'ies'} detected:
+                                </p>
+                                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                                  {analysis.analysis_result.deficiencies.map((def: any, idx: number) => (
+                                    <li key={idx}>{def.vitamin} - {def.severity}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-green-600 dark:text-green-400 font-medium">
+                                No deficiency detected
+                              </p>
+                            )}
                           </CardContent>
                         </Card>
                       ))}

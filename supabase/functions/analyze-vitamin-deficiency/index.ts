@@ -41,15 +41,17 @@ Deno.serve(async (req) => {
       nails: "Inspect this nail image for vitamin deficiency indicators. Look for: brittle/splitting nails (biotin, iron), white spots (zinc), pale nail beds (iron, B12), spoon-shaped nails (iron), ridges (B vitamins, iron). Detail deficiencies, severity levels, nail signs, and nutritional recommendations.",
     };
 
-    const systemPrompt = `You are a medical AI assistant specializing in nutritional deficiency detection through visual analysis. 
+    const systemPrompt = `You are a medical AI assistant specializing ONLY in vitamin deficiency detection through visual analysis. 
+
+IMPORTANT: You must ONLY analyze for vitamin and mineral deficiencies. Do not provide information about allergies, diseases, or other health conditions.
 
 Analyze images carefully and provide structured output with:
-1. List of potential vitamin/mineral deficiencies
+1. List of potential vitamin/mineral deficiencies ONLY
 2. Severity level (low/moderate/severe) with confidence score (0-1)
 3. Specific visible signs observed
 4. Dietary recommendations and supplement suggestions
 
-Be conservative - only flag deficiencies with clear visual indicators. Always recommend consulting healthcare providers for diagnosis.
+Be conservative - only flag deficiencies with clear visual indicators. If NO vitamin deficiencies are detected, return an empty deficiencies array with overall_health: "No deficiency detected".
 
 Return a JSON object with this exact structure:
 {
@@ -62,7 +64,7 @@ Return a JSON object with this exact structure:
       "recommendations": ["recommendation1", "recommendation2"]
     }
   ],
-  "overall_health": "Brief overall assessment"
+  "overall_health": "No deficiency detected" (if no deficiencies found) OR "Brief overall assessment of deficiencies"
 }`;
 
     console.log(`Analyzing ${bodyPart} image for vitamin deficiencies`);
