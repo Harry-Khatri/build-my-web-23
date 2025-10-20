@@ -6,7 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
-import medicalBackground from "@/assets/medical-background.jpg";
 
 type BodyPart = "skin" | "eyes" | "tongue" | "nails";
 
@@ -128,15 +127,7 @@ const Index = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
-      style={{ backgroundImage: `url(${medicalBackground})` }}
-    >
-      {/* Overlay for better readability */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
-      
-      {/* Content wrapper */}
-      <div className="relative z-10">
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       {/* Navigation */}
       <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4">
@@ -292,20 +283,16 @@ const Index = () => {
         ) : (
           /* Results Section */
           <div className="max-w-4xl mx-auto space-y-6">
-            <Card className="bg-white/95 dark:bg-gray-800/95 backdrop-blur">
+            <Card>
               <CardHeader>
-                <CardTitle>Vitamin Deficiency Analysis Results</CardTitle>
+                <CardTitle>Analysis Results</CardTitle>
+                <CardDescription>{result.overall_health}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {result.deficiencies.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
-                      No deficiency detected
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Your analysis shows no signs of vitamin deficiencies. Keep up the good health!
-                    </p>
-                  </div>
+                  <p className="text-center text-muted-foreground py-8">
+                    No significant vitamin deficiencies detected. Keep up the good health!
+                  </p>
                 ) : (
                   result.deficiencies.map((deficiency, index) => (
                     <Card key={index} className="border-l-4 border-l-primary">
@@ -396,7 +383,6 @@ const Index = () => {
             </CardContent>
           </Card>
         )}
-      </div>
       </div>
     </div>
   );
