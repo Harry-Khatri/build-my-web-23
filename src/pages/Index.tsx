@@ -303,7 +303,7 @@ const Index = () => {
               <CardContent className="space-y-6">
                 {result.deficiencies.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">
-                    No significant vitamin deficiencies detected. Keep up the good health!
+                    {result.overall_health}
                   </p>
                 ) : (
                   result.deficiencies.map((deficiency, index) => (
