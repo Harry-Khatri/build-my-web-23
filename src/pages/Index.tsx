@@ -13,10 +13,7 @@ type BodyPart = "skin" | "eyes" | "tongue" | "nails";
 interface AnalysisResult {
   deficiencies: Array<{
     vitamin: string;
-    severity: "low" | "moderate" | "severe";
-    confidence: number;
-    signs: string[];
-    recommendations: string[];
+    description: string;
   }>;
   overall_health: string;
 }
@@ -311,41 +308,12 @@ const Index = () => {
                   result.deficiencies.map((deficiency, index) => (
                     <Card key={index} className="border-l-4 border-l-primary">
                       <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
-                          <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              deficiency.severity === "severe"
-                                ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
-                                : deficiency.severity === "moderate"
-                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
-                                : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100"
-                            }`}
-                          >
-                            {deficiency.severity.toUpperCase()}
-                          </span>
-                        </div>
-                        <CardDescription>
-                          Confidence: {Math.round(deficiency.confidence * 100)}%
-                        </CardDescription>
+                        <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold mb-2">Observed Signs:</h4>
-                          <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                            {deficiency.signs.map((sign, i) => (
-                              <li key={i}>{sign}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-2">Recommendations:</h4>
-                          <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                            {deficiency.recommendations.map((rec, i) => (
-                              <li key={i}>{rec}</li>
-                            ))}
-                          </ul>
-                        </div>
+                      <CardContent>
+                        <p className="text-muted-foreground leading-relaxed">
+                          → {deficiency.description}
+                        </p>
                       </CardContent>
                     </Card>
                   ))

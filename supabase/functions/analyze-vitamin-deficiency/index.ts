@@ -8,10 +8,7 @@ const corsHeaders = {
 interface DeficiencyAnalysis {
   deficiencies: Array<{
     vitamin: string;
-    severity: "low" | "moderate" | "severe";
-    confidence: number;
-    signs: string[];
-    recommendations: string[];
+    description: string;
   }>;
   overall_health: string;
 }
@@ -95,27 +92,22 @@ Deno.serve(async (req) => {
 
     const systemPrompt = `You are a medical nutrition specialist analyzing images for vitamin and mineral deficiency detection.
 
-Analyze images carefully and provide structured output with:
-1. List of potential vitamin/mineral deficiencies
-2. Severity level (low/moderate/severe) with confidence score (0-1)
-3. Specific visible signs observed
-4. Dietary recommendations and supplement suggestions
+Analyze images carefully and provide concise descriptions of potential deficiencies.
 
-Be conservative - only flag deficiencies with clear visual indicators. Always recommend consulting healthcare providers for diagnosis.
+Be conservative - only flag deficiencies with clear visual indicators.
 
 Return a JSON object with this exact structure:
 {
   "deficiencies": [
     {
-      "vitamin": "Vitamin Name or Mineral",
-      "severity": "low" | "moderate" | "severe",
-      "confidence": 0.0-1.0,
-      "signs": ["sign1", "sign2"],
-      "recommendations": ["recommendation1", "recommendation2"]
+      "vitamin": "Vitamin A",
+      "description": "Deficiency of vitamin A is associated with significant morbidity and mortality from common childhood infections, and is the world's leading preventable cause of childhood blindness. Vitamin A deficiency also contributes to maternal mortality and other poor outcomes of pregnancy and lactation."
     }
   ],
   "overall_health": "Brief overall assessment"
-}`;
+}
+
+Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations in the description.`;
 
     console.log(`Analyzing ${bodyPart} image for vitamin deficiencies`);
 
