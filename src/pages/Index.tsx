@@ -14,6 +14,7 @@ interface AnalysisResult {
   deficiencies: Array<{
     vitamin: string;
     description: string;
+    confidence: number;
   }>;
   overall_health: string;
 }
@@ -308,7 +309,12 @@ const Index = () => {
                   result.deficiencies.map((deficiency, index) => (
                     <Card key={index} className="border-l-4 border-l-primary">
                       <CardHeader>
-                        <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
+                          <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                            {deficiency.confidence}% confidence
+                          </span>
+                        </div>
                       </CardHeader>
                       <CardContent>
                         <p className="text-muted-foreground leading-relaxed">

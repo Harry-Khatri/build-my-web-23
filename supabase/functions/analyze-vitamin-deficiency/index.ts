@@ -9,6 +9,7 @@ interface DeficiencyAnalysis {
   deficiencies: Array<{
     vitamin: string;
     description: string;
+    confidence: number;
   }>;
   overall_health: string;
 }
@@ -101,13 +102,14 @@ Return a JSON object with this exact structure:
   "deficiencies": [
     {
       "vitamin": "Vitamin A",
-      "description": "Deficiency of vitamin A is associated with significant morbidity and mortality from common childhood infections, and is the world's leading preventable cause of childhood blindness. Vitamin A deficiency also contributes to maternal mortality and other poor outcomes of pregnancy and lactation."
+      "description": "Deficiency of vitamin A is associated with significant morbidity and mortality from common childhood infections, and is the world's leading preventable cause of childhood blindness. Vitamin A deficiency also contributes to maternal mortality and other poor outcomes of pregnancy and lactation.",
+      "confidence": 85
     }
   ],
   "overall_health": "Brief overall assessment"
 }
 
-Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations in the description.`;
+Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations or diagnostic suggestions in the description. Provide a confidence percentage (0-100) for each deficiency based on the clarity of visual indicators.`;
 
     console.log(`Analyzing ${bodyPart} image for vitamin deficiencies`);
 
