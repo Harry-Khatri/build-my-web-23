@@ -42,10 +42,10 @@ const Index = () => {
   }, []);
 
   const bodyParts = [
-    { id: "skin" as BodyPart, label: "Skin", icon: Droplet, description: "Analyze skin texture & color" },
-    { id: "eyes" as BodyPart, label: "Eyes", icon: Eye, description: "Check eye health indicators" },
-    { id: "tongue" as BodyPart, label: "Tongue", icon: Microscope, description: "Examine tongue appearance" },
-    { id: "nails" as BodyPart, label: "Nails", icon: HandMetal, description: "Inspect nail condition" },
+    { id: "skin" as BodyPart, label: "Skin", icon: Droplet, description: "Examine skin texture & pigmentation" },
+    { id: "eyes" as BodyPart, label: "Eyes", icon: Eye, description: "Assess eye health indicators" },
+    { id: "tongue" as BodyPart, label: "Tongue", icon: Microscope, description: "Evaluate tongue appearance" },
+    { id: "nails" as BodyPart, label: "Nails", icon: HandMetal, description: "Inspect nail structure & color" },
   ];
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,13 +106,13 @@ const Index = () => {
       }
 
       toast({
-        title: "Analysis Complete",
+        title: "Assessment Complete",
         description: "Your results are ready",
       });
     } catch (error) {
       console.error("Analysis error:", error);
       toast({
-        title: "Analysis Failed",
+        title: "Assessment Failed",
         description: "Please try again or use a different image",
         variant: "destructive",
       });
@@ -145,7 +145,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-8">
-              <h2 className="text-xl font-bold">Vitamin Detector</h2>
+              <h2 className="text-xl font-bold">Nutritional Assessment</h2>
               <div className="hidden md:flex gap-6">
                 <Button variant="ghost" onClick={() => navigate("/")}>Home</Button>
                 <Button variant="ghost" onClick={() => navigate("/learn-more")}>Learn More</Button>
@@ -195,10 +195,10 @@ const Index = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Vitamin Deficiency Detector
+            Nutritional Health Assessment Tool
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Advanced visual analysis to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
+            Professional visual assessment to identify potential vitamin deficiencies through examination of skin, eyes, tongue, and nails
           </p>
         </div>
 
@@ -263,9 +263,9 @@ const Index = () => {
             {imagePreview && (
               <Card className="max-w-2xl mx-auto">
                 <CardHeader>
-                  <CardTitle>Ready to Analyze</CardTitle>
+                  <CardTitle>Ready for Assessment</CardTitle>
                   <CardDescription>
-                    Review your image and click analyze when ready
+                    Review your image and proceed with examination
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -282,7 +282,7 @@ const Index = () => {
                       disabled={isAnalyzing}
                       className="flex-1"
                     >
-                      {isAnalyzing ? "Analyzing..." : "Analyze Image"}
+                      {isAnalyzing ? "Examining..." : "Begin Assessment"}
                     </Button>
                     <Button variant="outline" onClick={reset}>
                       Start Over
@@ -297,7 +297,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Analysis Results</CardTitle>
+                <CardTitle>Assessment Results</CardTitle>
                 <CardDescription>{result.overall_health}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -312,9 +312,9 @@ const Index = () => {
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
                           {deficiency.confidence && (
-                            <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                              {deficiency.confidence}% confidence
-                            </span>
+                          <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                            {deficiency.confidence}% certainty
+                          </span>
                           )}
                         </div>
                       </CardHeader>
@@ -331,16 +331,16 @@ const Index = () => {
 
             <div className="flex gap-4">
               <Button onClick={reset} className="flex-1">
-                New Analysis
+                New Assessment
               </Button>
             </div>
 
             <Card className="bg-secondary/50">
               <CardContent className="pt-6">
                 <p className="text-sm text-muted-foreground">
-                  <strong>Disclaimer:</strong> This tool provides preliminary insights based on visual analysis
-                  and should not replace professional medical diagnosis. Please consult a healthcare provider
-                  for accurate diagnosis and treatment.
+                  <strong>Medical Disclaimer:</strong> This assessment provides preliminary observations based on visual examination
+                  and should not replace professional medical consultation. Please consult a qualified healthcare provider
+                  for accurate diagnosis and treatment recommendations.
                 </p>
               </CardContent>
             </Card>
@@ -356,10 +356,10 @@ const Index = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {[
-                  { step: "1", title: "Select", desc: "Choose the body part to analyze" },
+                  { step: "1", title: "Select", desc: "Choose the body part to examine" },
                   { step: "2", title: "Upload", desc: "Take or upload a clear photo" },
-                  { step: "3", title: "Analyze", desc: "System examines for deficiency signs" },
-                  { step: "4", title: "Results", desc: "Get detailed insights & advice" },
+                  { step: "3", title: "Examine", desc: "Professional visual assessment" },
+                  { step: "4", title: "Results", desc: "Receive detailed findings" },
                 ].map((item) => (
                   <div key={item.step} className="text-center">
                     <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
