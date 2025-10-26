@@ -109,7 +109,7 @@ Return a JSON object with this exact structure:
   "overall_health": "Brief overall assessment"
 }
 
-Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations or diagnostic suggestions in the description. Provide a confidence percentage (0-100) for each deficiency based on the clarity of visual indicators.`;
+IMPORTANT: You MUST include a "confidence" field (numeric value 0-100) for EVERY deficiency detected. Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations or diagnostic suggestions in the description. The confidence percentage should reflect the clarity of visual indicators.`;
 
     console.log(`Analyzing ${bodyPart} image for vitamin deficiencies`);
 

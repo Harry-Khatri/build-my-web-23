@@ -311,9 +311,11 @@ const Index = () => {
                       <CardHeader>
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-xl">{deficiency.vitamin}</CardTitle>
-                          <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                            {deficiency.confidence}% confidence
-                          </span>
+                          {deficiency.confidence && (
+                            <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                              {deficiency.confidence}% confidence
+                            </span>
+                          )}
                         </div>
                       </CardHeader>
                       <CardContent>
