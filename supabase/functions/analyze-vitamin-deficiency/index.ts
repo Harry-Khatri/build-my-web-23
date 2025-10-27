@@ -85,15 +85,25 @@ Deno.serve(async (req) => {
 
     // Step 2: Analyze for vitamin deficiencies
     const prompts = {
-      skin: "Analyze this skin image for signs of vitamin deficiencies. Look for: pale or yellowish skin (B12, folate, iron), dry/scaly patches (A, E), easy bruising (C, K), poor wound healing (C, zinc). Identify specific deficiencies, severity, visible signs, and provide dietary recommendations.",
-      eyes: "Analyze this eye image for vitamin deficiency signs. Look for: night blindness indicators (A), pale conjunctiva (iron, B12), bloodshot eyes (B2), corneal issues (A), dry eyes (A, omega-3). Identify deficiencies, severity, observable signs, and suggest supplements or foods.",
-      tongue: "Examine this tongue image for nutritional deficiencies. Look for: pale tongue (iron, B12), red/inflamed tongue (B vitamins), smooth tongue (B12, folate, iron), cracks/fissures (B vitamins, iron, zinc), coating changes. List deficiencies, severity, symptoms seen, and dietary advice.",
-      nails: "Inspect this nail image for vitamin deficiency indicators. Look for: brittle/splitting nails (biotin, iron), white spots (zinc), pale nail beds (iron, B12), spoon-shaped nails (iron), ridges (B vitamins, iron). Detail deficiencies, severity levels, nail signs, and nutritional recommendations.",
+      skin: "Analyze this skin image ONLY for signs of vitamin deficiencies related to Vitamins A, B, and C. Look for visible indicators specific to these vitamins only.",
+      eyes: "Analyze this eye image ONLY for signs of vitamin deficiencies related to Vitamins A and B. Look for visible indicators specific to these vitamins only.",
+      tongue: "Analyze this tongue image ONLY for signs of vitamin deficiencies related to Vitamin B. Look for visible indicators specific to this vitamin only.",
+      nails: "Analyze this nail image ONLY for signs of vitamin deficiencies related to Vitamin C. Look for visible indicators specific to this vitamin only.",
     };
 
-    const systemPrompt = `You are a medical nutrition specialist analyzing images for vitamin and mineral deficiency detection.
+    const systemPrompt = `You are a medical nutrition specialist analyzing images strictly for vitamin deficiency detection.
 
-Analyze images carefully and provide concise descriptions of potential deficiencies.
+CRITICAL RULES:
+- ONLY analyze for vitamin deficiencies based on the specified vitamins in the prompt
+- DO NOT mention or suggest any other health conditions, allergies, infections, hormonal problems, dehydration, or environmental factors
+- DO NOT include minerals, proteins, or other nutrients unless they are vitamins
+- Your output must be strictly limited to vitamin deficiency detection only
+
+Analyze the image and identify visible signs of vitamin deficiencies for:
+- Skin: Vitamins A, B, C only
+- Eyes: Vitamins A, B only
+- Tongue: Vitamin B only
+- Nails: Vitamin C only
 
 Be conservative - only flag deficiencies with clear visual indicators.
 
@@ -109,7 +119,12 @@ Return a JSON object with this exact structure:
   "overall_health": "Brief overall assessment"
 }
 
-IMPORTANT: You MUST include a "confidence" field (numeric value 0-100) for EVERY deficiency detected. Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms. Do not include treatment recommendations or diagnostic suggestions in the description. The confidence percentage should reflect the clarity of visual indicators.`;
+IMPORTANT: 
+- You MUST include a "confidence" field (numeric value 0-100) for EVERY deficiency detected
+- Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms
+- Do not include treatment recommendations or diagnostic suggestions in the description
+- The confidence percentage should reflect the clarity of visual indicators
+- ONLY report on the vitamins specified for each body part - do not include any other conditions or causes`;
 
     console.log(`Analyzing ${bodyPart} image for vitamin deficiencies`);
 
