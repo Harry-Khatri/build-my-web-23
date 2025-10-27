@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import medicalBg from "@/assets/medical-supplements-bg.jpg";
 
-type BodyPart = "skin" | "eyes" | "tongue" | "nails";
+type BodyPart = "eyes" | "tongue" | "nails";
 
 interface AnalysisResult {
   deficiencies: Array<{
@@ -42,7 +42,6 @@ const Index = () => {
   }, []);
 
   const bodyParts = [
-    { id: "skin" as BodyPart, label: "Skin", icon: Droplet, description: "Analyze skin texture & color" },
     { id: "eyes" as BodyPart, label: "Eyes", icon: Eye, description: "Check eye health indicators" },
     { id: "tongue" as BodyPart, label: "Tongue", icon: Microscope, description: "Examine tongue appearance" },
     { id: "nails" as BodyPart, label: "Nails", icon: HandMetal, description: "Inspect nail condition" },
@@ -198,7 +197,7 @@ const Index = () => {
             Vitamin Deficiency Detector
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Advanced visual analysis to detect potential vitamin deficiencies by examining your skin, eyes, tongue, and nails
+            Advanced visual analysis to detect potential vitamin deficiencies by examining your eyes, tongue, and nails
           </p>
         </div>
 
@@ -206,7 +205,7 @@ const Index = () => {
           <>
             {/* Body Part Selection */}
             {!selectedPart && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 {bodyParts.map((part) => (
                   <Card
                     key={part.id}

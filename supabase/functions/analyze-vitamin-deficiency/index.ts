@@ -33,7 +33,6 @@ Deno.serve(async (req) => {
 
     // Step 1: Validate that the image matches the selected body part
     const validationPrompts = {
-      skin: "Is this image showing human skin? Look for skin texture, pores, and skin surface. Return true only if you can clearly see skin.",
       eyes: "Is this image showing a human eye? Look for iris, pupil, sclera, eyelid, or eyelashes. Return true only if you can clearly see an eye.",
       tongue: "Is this image showing a human tongue? Look for tongue surface, papillae, or oral cavity. Return true only if you can clearly see a tongue.",
       nails: "Is this image showing human nails? Look for nail plate, nail bed, or fingertips/toes. Return true only if you can clearly see nails.",
@@ -85,7 +84,6 @@ Deno.serve(async (req) => {
 
     // Step 2: Analyze for vitamin deficiencies
     const prompts = {
-      skin: "Analyze this skin image ONLY for signs of vitamin deficiencies related to Vitamins A, B, and C. Look for visible indicators specific to these vitamins only.",
       eyes: "Analyze this eye image ONLY for signs of vitamin deficiencies related to Vitamins A and B. Look for visible indicators specific to these vitamins only.",
       tongue: "Analyze this tongue image ONLY for signs of vitamin deficiencies related to Vitamin B. Look for visible indicators specific to this vitamin only.",
       nails: "Analyze this nail image ONLY for signs of vitamin deficiencies related to Vitamin C. Look for visible indicators specific to this vitamin only.",
@@ -101,7 +99,6 @@ CRITICAL RULES:
 - Your output must be strictly limited to vitamin deficiency detection only
 
 Analyze the image and identify visible signs of vitamin deficiencies for:
-- Skin: Vitamins A, B, C only
 - Eyes: Vitamins A, B only
 - Tongue: Vitamin B only
 - Nails: Vitamin C only
