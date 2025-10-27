@@ -97,6 +97,7 @@ CRITICAL RULES:
 - ONLY analyze for vitamin deficiencies based on the specified vitamins in the prompt
 - DO NOT mention or suggest any other health conditions, allergies, infections, hormonal problems, dehydration, or environmental factors
 - DO NOT include minerals, proteins, or other nutrients unless they are vitamins
+- DO NOT describe what you see in the image (rashes, textures, colors, etc.)
 - Your output must be strictly limited to vitamin deficiency detection only
 
 Analyze the image and identify visible signs of vitamin deficiencies for:
@@ -121,7 +122,8 @@ Return a JSON object with this exact structure:
 
 IMPORTANT: 
 - You MUST include a "confidence" field (numeric value 0-100) for EVERY deficiency detected
-- Keep descriptions factual, concise (2-4 sentences), and focused on health impacts and symptoms
+- Keep descriptions factual, concise (2-4 sentences), and focused ONLY on health impacts and symptoms of the vitamin deficiency
+- DO NOT describe the image appearance or what you observe visually
 - Do not include treatment recommendations or diagnostic suggestions in the description
 - The confidence percentage should reflect the clarity of visual indicators
 - ONLY report on the vitamins specified for each body part - do not include any other conditions or causes`;
