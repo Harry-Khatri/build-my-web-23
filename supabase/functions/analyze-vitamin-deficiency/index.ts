@@ -183,13 +183,8 @@ IMPORTANT:
 
     // Override overall_health message when no deficiencies are found
     if (analysis.deficiencies.length === 0) {
-      const normalMessages = {
-        skin: "The skin appears to be within normal limits with no clear visual indicators of nutritional deficiencies.",
-        eyes: "The eye appears to be within normal limits with no clear visual indicators of nutritional deficiencies.",
-        tongue: "The tongue appears to be within normal limits with no clear visual indicators of nutritional deficiencies.",
-        nails: "The nails appears to be within normal limits with no clear visual indicators of nutritional deficiencies.",
-      };
-      analysis.overall_health = normalMessages[bodyPart as keyof typeof normalMessages] || analysis.overall_health;
+      analysis.overall_health = "No vitamin deficiency detected.";
+      analysis.deficiencies = [];
     }
 
     console.log(`Analysis complete: ${analysis.deficiencies.length} deficiencies found`);
