@@ -180,10 +180,38 @@ IMPORTANT:
     
     const analysis: DeficiencyAnalysis = JSON.parse(analysisText);
 
-    // Override overall_health message when no deficiencies are found
-    if (analysis.deficiencies.length === 0) {
-      analysis.overall_health = "No vitamin deficiency detected.";
+    // Sanitize: keep only allowed vitamins per body part and normalize names
+    const normalizeVitamin = (v: string): string | null => {
+      const l = v.toLowerCase();
+      if (l.includes("vitamin a")) return "Vitamin A";
+      if (l.includes("vitamin b")) return "Vitamin B";
+      if (l.includes("vitamin c")) return "Vitamin C";
+      return null; // drop minerals like iron, biotin, etc.
+    };
+
+    const allowedByPart: Record<string, string[]> = {
+      eyes: ["Vitamin A", "Vitamin B"],
+      tongue: ["Vitamin B"],
+      nails: ["Vitamin C"],
+    };
+
+    analysis.deficiencies = (analysis.deficiencies || [])
+      .map((d) => {
+        const nv = normalizeVitamin(d.vitamin);
+        if (!nv) return null;
+        return { ...d, vitamin: nv };
+      })
+      .filter(
+        (d): d is { vitamin: string; description: string; confidence: number } =>
+          !!d && allowedByPart[bodyPart as keyof typeof allowedByPart].includes(d.vitamin)
+      );
+
+    // Override message when no valid deficiencies remain
+    if (!analysis.deficiencies || analysis.deficiencies.length === 0) {
       analysis.deficiencies = [];
+      analysis.overall_health = bodyPart === "nails"
+        ? "Healthy nails: no vitamin deficiency detected."
+        : "No vitamin deficiency detected.";
     }
 
     console.log(`Analysis complete: ${analysis.deficiencies.length} deficiencies found`);
