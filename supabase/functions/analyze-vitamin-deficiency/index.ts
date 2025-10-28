@@ -209,9 +209,7 @@ IMPORTANT:
     // Override message when no valid deficiencies remain
     if (!analysis.deficiencies || analysis.deficiencies.length === 0) {
       analysis.deficiencies = [];
-      analysis.overall_health = bodyPart === "nails"
-        ? "Healthy nails: no vitamin deficiency detected."
-        : "No vitamin deficiency detected.";
+      analysis.overall_health = "No clear visual indicators of vitamin or mineral deficiencies are apparent in the provided image.";
     }
 
     console.log(`Analysis complete: ${analysis.deficiencies.length} deficiencies found`);
