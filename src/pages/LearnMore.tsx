@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Brain, Camera, Shield, Zap } from "lucide-react";
+import modelAccuracy from "@/assets/model-accuracy.png";
 
 const LearnMore = () => {
   const navigate = useNavigate();
@@ -43,6 +44,13 @@ const LearnMore = () => {
                     It uses multiple convolutional layers to extract hierarchical features from images, 
                     making it ideal for detecting subtle visual patterns associated with vitamin deficiencies.
                   </p>
+                  <div className="mt-4">
+                    <img 
+                      src={modelAccuracy} 
+                      alt="AlexNet Model Accuracy - 93% accuracy achieved during training" 
+                      className="w-full rounded-lg border border-border shadow-sm"
+                    />
+                  </div>
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">RCNN Technology</h3>
