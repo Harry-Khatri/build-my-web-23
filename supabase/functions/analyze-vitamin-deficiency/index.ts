@@ -178,7 +178,19 @@ IMPORTANT:
     
     console.log("Raw AI response:", analysisText);
     
-    const analysis: DeficiencyAnalysis = JSON.parse(analysisText);
+    // Strip markdown code blocks if present
+    let cleanedText = analysisText.trim();
+    if (cleanedText.startsWith('```json')) {
+      cleanedText = cleanedText.slice(7); // Remove ```json
+    } else if (cleanedText.startsWith('```')) {
+      cleanedText = cleanedText.slice(3); // Remove ```
+    }
+    if (cleanedText.endsWith('```')) {
+      cleanedText = cleanedText.slice(0, -3); // Remove trailing ```
+    }
+    cleanedText = cleanedText.trim();
+    
+    const analysis: DeficiencyAnalysis = JSON.parse(cleanedText);
 
     // Sanitize: keep only allowed vitamins per body part and normalize names
     const normalizeVitamin = (v: string): string | null => {
