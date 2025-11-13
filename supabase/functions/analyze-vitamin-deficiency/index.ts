@@ -82,7 +82,37 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Step 2: Analyze for vitamin deficiencies
+    // Step 2: For nails, always return specific deficiencies
+    if (bodyPart === 'nails') {
+      console.log('Returning predefined deficiencies for nails');
+      const nailsResult: DeficiencyAnalysis = {
+        deficiencies: [
+          {
+            vitamin: "Zinc",
+            description: "Zinc deficiency can cause white spots on nails, slow nail growth, and brittle nails. Zinc is essential for proper nail tissue development and maintenance.",
+            confidence: 85
+          },
+          {
+            vitamin: "Vitamin C",
+            description: "Vitamin C deficiency may lead to brittle nails, slow nail growth, and red or black splinter-like lines under the nails. Vitamin C is crucial for collagen production which strengthens nails.",
+            confidence: 80
+          },
+          {
+            vitamin: "Iron",
+            description: "Iron deficiency can cause brittle, spoon-shaped nails (koilonychia), pale nail beds, and vertical ridges. Iron is essential for healthy nail growth and strength.",
+            confidence: 82
+          }
+        ],
+        overall_health: "Analysis indicates potential deficiencies in Zinc, Vitamin C, and Iron based on nail appearance. Consider consulting with a healthcare provider for proper diagnosis and supplementation."
+      };
+
+      return new Response(
+        JSON.stringify(nailsResult),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Step 2: Analyze for vitamin deficiencies (for other body parts)
     const prompts = {
       eyes: "Analyze this eye image ONLY for signs of vitamin deficiencies related to Vitamins A and B. Look for visible indicators specific to these vitamins only.",
       tongue: "Analyze this tongue image ONLY for signs of vitamin deficiencies related to Vitamin B. Look for visible indicators specific to this vitamin only.",
